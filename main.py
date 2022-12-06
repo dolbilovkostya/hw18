@@ -65,4 +65,94 @@ def page_movie_between_years(year_from, year_to):
     return data
 
 
+@app.route('/rating/children')
+def page_movies_for_children():
+    con = sqlite3.connect("netflix.db")
+    cur = con.cursor()
+
+    cur.execute(
+        f"""
+        SELECT title, rating, description
+        FROM netflix
+        WHERE rating = 'G'
+        LIMIT 100
+        """
+    )
+
+    result = cur.fetchall()
+
+    data = []
+    for row in result:
+        movie = {
+            'title': row[0],
+            'rating': row[1],
+            'description': row[2]
+        }
+        data.append(movie)
+
+    con.close()
+
+    return data
+
+
+@app.route('/rating/family')
+def page_family_movies():
+    con = sqlite3.connect("netflix.db")
+    cur = con.cursor()
+
+    cur.execute(
+        f"""
+        SELECT title, rating, description
+        FROM netflix
+        WHERE rating = 'G' OR rating = 'PG' OR rating = 'PG-13'
+        LIMIT 100
+        """
+    )
+
+    result = cur.fetchall()
+
+    data = []
+    for row in result:
+        movie = {
+            'title': row[0],
+            'rating': row[1],
+            'description': row[2]
+        }
+        data.append(movie)
+
+    con.close()
+
+    return data
+
+
+@app.route('/rating/adult')
+def page_adult_movies():
+    con = sqlite3.connect("netflix.db")
+    cur = con.cursor()
+
+    cur.execute(
+        f"""
+        SELECT title, rating, description
+        FROM netflix
+        WHERE rating = 'R' OR rating = 'NC-17'
+        LIMIT 100
+        """
+    )
+
+    result = cur.fetchall()
+
+    data = []
+    for row in result:
+        movie = {
+            'title': row[0],
+            'rating': row[1],
+            'description': row[2]
+        }
+        data.append(movie)
+
+    con.close()
+
+    return data
+
+
 app.run(host='0.0.0.0', port=800)
