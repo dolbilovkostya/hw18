@@ -13,7 +13,7 @@ def page_movie(title):
 
     cur.execute(
         f"""
-        SELECT title, country, release_year, type, description
+        SELECT title, country, release_year, listed_in, description
         FROM netflix 
         WHERE title = '{title}'
         ORDER BY  release_year DESC
@@ -147,6 +147,36 @@ def page_adult_movies():
             'title': row[0],
             'rating': row[1],
             'description': row[2]
+        }
+        data.append(movie)
+
+    con.close()
+
+    return data
+
+
+@app.route('/genre/<genre>')
+def page_by_genre(genre):
+    con = sqlite3.connect("netflix.db")
+    cur = con.cursor()
+
+    cur.execute(
+        f"""
+        SELECT title, description
+        FROM netflix
+        WHERE  listed_in LIKE '%{genre}%'
+        ORDER BY release_year DESC 
+        LIMIT 10
+        """
+    )
+
+    result = cur.fetchall()
+
+    data = []
+    for row in result:
+        movie = {
+            'title': row[0],
+            'description': row[1],
         }
         data.append(movie)
 
