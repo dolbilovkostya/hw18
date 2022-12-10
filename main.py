@@ -37,8 +37,6 @@ def page_movie(title):
         return jsonify(data)
 
 
-
-
 @app.route('/movie/<int:year_from>/to/<int:year_to>')
 def page_movie_between_years(year_from, year_to):
     con = sqlite3.connect("netflix.db")
